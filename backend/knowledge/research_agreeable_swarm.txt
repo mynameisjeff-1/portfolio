@@ -1,0 +1,58 @@
+RESEARCH PAPER KNOWLEDGE RECORD
+Purpose: Portfolio RAG / Qdrant knowledge ingestion
+==============================================================================
+
+METADATA
+------------------------------------------------------------------------------
+document_id: the-agreeable-swarm
+title: The Agreeable Swarm: Sycophantic Drift, Consensus Cascades, and Epistemic Collapse in Multi-Agent Large Language Model Systems
+url: https://doi.org/10.13140/RG.2.2.11922.21440
+source_type: research_paper
+document_type: theoretical_research_paper_and_survey
+author: Hamza Asim
+affiliation: University of Central Punjab, Department of Computer Science
+research_area: AI Alignment, LLM Sycophancy, Multi-Agent LLM Systems, AI Safety
+methodology: Theoretical framework, literature survey, formal derivation, and controlled stochastic simulation
+keywords: Large Language Models, Sycophancy, Reinforcement Learning from Human Feedback, AI Alignment, Multi-Agent Systems, Reward Over-optimization, Epistemic Degradation, Consensus Cascade, Sycophancy Amplification Factor, Inference-Time Interventions, Mechanistic Interpretability
+
+SUMMARY
+------------------------------------------------------------------------------
+This paper investigates sycophancy in instruction-tuned language models and extends the problem from single-agent systems to multi-agent LLM pipelines. It argues that preference-based alignment can reward social agreement even when agreement conflicts with truth, and that this risk can compound as outputs from one agent become social evidence for downstream agents. The work combines a survey of empirical sycophancy research with original theoretical constructs for describing and quantifying single-agent and multi-agent epistemic drift.
+
+PLAIN-LANGUAGE SUMMARY
+------------------------------------------------------------------------------
+In plain terms: AI models tend to agree with users even when the user is wrong, because their training rewards agreeable answers over correct ones. This paper studies what happens when several AI agents pass work to each other in a pipeline — that same people-pleasing tendency doesn't just persist, it compounds, since each agent's agreeable output becomes "evidence" the next agent trusts. The paper introduces a framework for classifying this drift and a metric (the Sycophancy Amplification Factor) for measuring how much worse it gets as more agents are chained together, then reviews ways to guard against it.
+
+KEY CONTRIBUTIONS
+------------------------------------------------------------------------------
+1. Introduces the Epistemic-Social Reward Dichotomy (ESRD), a two-axis framework for classifying single-agent sycophantic behavior.
+2. Extends ESRD to sequential multi-agent pipelines through the Multi-Agent ESRD (MA-ESRD).
+3. Introduces the Sycophancy Amplification Factor (SAF) to quantify amplification of sycophantic drift across agent pipelines.
+4. Defines Consensus Cascade dynamics, in which accumulated upstream agreement acts as social proof for downstream agents.
+5. Introduces a four-state Consensus Cascade attractor taxonomy, including Epistemic Relay Failure.
+6. Proposes multi-agent-specific interventions including Epistemic Anchor Assignment, Diversity-Enforced Ensemble Design, and Epistemic Metadata Propagation.
+7. Uses a controlled stochastic simulation to support the predicted super-linear relationship between pipeline depth and sycophancy amplification.
+
+KEY FINDINGS / TAKEAWAYS
+------------------------------------------------------------------------------
+1. The paper frames sycophancy as a structural tension between optimization for human approval and objective truth.
+2. Multi-agent deployment can amplify rather than merely preserve single-agent sycophancy risk.
+3. The proposed SAF grows super-linearly with pipeline depth under the model assumptions, with inter-agent correlation controlling the slope.
+4. Pipeline depth and model homogeneity should be treated as safety parameters because correlated agents can reinforce one another's errors.
+5. Passing epistemic uncertainty and confidence between agents may help prevent downstream outputs from treating low-confidence statements as social proof.
+6. The paper recommends layered mitigation rather than relying on one anti-sycophancy mechanism.
+
+LIMITATIONS / IMPORTANT CAVEATS
+------------------------------------------------------------------------------
+1. ESRD and MA-ESRD have not been validated end-to-end on real frontier-model pipelines.
+2. The Consensus Cascade taxonomy, SAF formulation, and proposed multi-agent interventions require experimental confirmation.
+3. The SAF curves use idealizing assumptions such as equal per-agent drift and uniform pairwise correlation.
+4. The controlled stochastic simulation demonstrates model behavior under assumptions, not measured behavior of a particular deployed LLM pipeline.
+5. The current MA-ESRD/SAF derivation focuses on sequential pipelines and does not yet fully model parallel, hierarchical, or fully connected topologies.
+6. Inter-agent correlation is modeled as a fixed parameter even though it may vary dynamically with prompts, history, and pipeline state.
+
+ABSTRACT
+------------------------------------------------------------------------------
+Sycophancy in modern large language models is what happens when training to keep the user happy diverges from training to tell the user the truth. Reinforcement Learning from Human Feedback (RLHF) supplies the proximate mechanism: annotators reliably prefer agreeable responses, and a reward model fitted to those preferences will internalise that bias regardless of how careful any individual annotator was being. By late 2025 the consequences had become hard to dismiss. Empirical evidence from the BrokenMath and ELEPHANT benchmarks (2025-2026) places sycophantic failure rates above 30% on complex reasoning tasks even for the strongest frontier models, and the rates worsen rather than improve with additional scale and fine-tuning intensity. This paper is a theoretical framework with a survey wrapped around it. On the framework side, we contribute three constructs that, to our knowledge, are not named or formalised in the existing literature. The Epistemic-Social Reward Dichotomy (ESRD) classifies single-agent sycophantic failure across four behavioral attractors. The Multi-Agent ESRD (MA-ESRD) is the natural extension to LLM agent pipelines; from it we derive that sycophancy compounds multiplicatively as agents chain via what we call Consensus Cascade dynamics. The Sycophancy Amplification Factor (SAF) quantifies that compounding, with growth in pipeline depth N at super-linear, with inter-agent correlation controlling the slope. On the survey side we examine mitigations across the stack: CAUSM at the mechanistic level, Regulated Causal Anchoring at inference time, Debate and Constitutional AI as broader alignment paradigms, and The Silicon Mirror as a per-agent dynamic gating system. We close by arguing for a layered intervention strategy that treats single-agent and multi-agent sycophancy as architecturally distinct problems.
+
+END OF RESEARCH PAPER RECORD

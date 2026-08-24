@@ -1,0 +1,56 @@
+VOLUNTEER EXPERIENCE KNOWLEDGE RECORD
+Purpose: Portfolio RAG / Qdrant knowledge ingestion
+
+==============================================================================
+METADATA
+------------------------------------------------------------------------------
+
+source_type: volunteer_experience
+organization: Akhuwat Foundation
+organization_type: International non-profit / charitable foundation
+role: Volunteer
+activity_type: Clothing Donation Drive
+duration: 1 month
+focus_areas: Community Service, Humanitarian Support, Clothing Donation, Social Welfare
+tags: volunteer, akhuwat-foundation, community-service, humanitarian-work, clothing-drive, social-impact, charity
+
+==============================================================================
+OPTIMIZED DESCRIPTION
+------------------------------------------------------------------------------
+
+Volunteered with Akhuwat Foundation for one month as part of a community clothing donation initiative focused on supporting underprivileged and needy individuals.
+
+During the activity, I helped collect new clothing donations from different people and locations, organized the collected items, and contributed to preparing them for distribution to families and individuals in need.
+
+The experience strengthened my communication, coordination, teamwork, and community-engagement skills while allowing me to contribute directly to a humanitarian initiative aimed at helping vulnerable communities.
+
+==============================================================================
+KEY RESPONSIBILITIES
+------------------------------------------------------------------------------
+
+- Collected new clothing donations from individuals and different collection locations.
+- Coordinated with donors and community members during the month-long campaign.
+- Helped organize and prepare donated clothing for distribution.
+- Supported the initiative's goal of providing essential clothing to poor and needy individuals.
+- Participated in community-focused humanitarian and charitable work.
+
+==============================================================================
+SKILLS DEMONSTRATED
+------------------------------------------------------------------------------
+
+- Communication
+- Community Engagement
+- Teamwork
+- Coordination
+- Social Responsibility
+- Volunteer Management Support
+- Humanitarian Service
+- Organization
+
+==============================================================================
+PORTFOLIO TALKING POINT
+------------------------------------------------------------------------------
+
+Completed a one-month volunteer initiative with Akhuwat Foundation, helping collect and organize new clothing donations from multiple donors and locations for distribution to underprivileged and needy communities.
+
+END OF VOLUNTEER EXPERIENCE RECORD

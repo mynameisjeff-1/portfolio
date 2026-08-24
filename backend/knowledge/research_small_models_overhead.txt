@@ -1,0 +1,56 @@
+RESEARCH PAPER KNOWLEDGE RECORD
+Purpose: Portfolio RAG / Qdrant knowledge ingestion
+==============================================================================
+
+METADATA
+------------------------------------------------------------------------------
+document_id: when-small-models-create-big-overhead
+title: When Small Models Create Big Overhead: The Specialization-Coordination Trade-off in Hybrid SLM-LLM Agent Systems
+source_type: research_paper
+document_type: research_manuscript
+author: Hamza Asim
+research_area: Agentic AI, Small Language Models, Large Language Models, Multi-Agent Systems, AI Systems Efficiency
+methodology: Theoretical synthesis, analytical cost model, decision framework, and illustrative deterministic scenario analysis
+keywords: Agentic AI, coordination overhead, hybrid AI systems, inference efficiency, large language models, model routing, multi-agent systems, small language models
+
+SUMMARY
+------------------------------------------------------------------------------
+This paper studies when replacing one capable large language model agent with multiple specialized small language model agents actually reduces total system cost. It argues that cheaper per-call inference does not automatically translate into a cheaper overall architecture because multi-agent systems introduce routing, communication, shared-context duplication, verification, escalation, and orchestration costs. The paper proposes an explicit system-level cost decomposition, derives a conditional break-even point for specialization, compares single-SLM, single-LLM, multi-SLM, and hybrid architectures, and presents a decision framework for architecture selection.
+
+PLAIN-LANGUAGE SUMMARY
+------------------------------------------------------------------------------
+In plain terms: it's tempting to replace one expensive large AI model with several cheaper, specialized small ones, since each individual call gets cheaper. This paper argues that logic can backfire — coordinating multiple smaller models (routing requests, passing context between them, double-checking each other's work) adds its own overhead, which can end up costing more than just using one capable model. It builds a cost model to show where that break-even point falls, and works through a set of test scenarios to see when splitting up the work actually pays off versus when it doesn't.
+
+KEY CONTRIBUTIONS
+------------------------------------------------------------------------------
+1. Proposes a seven-part decomposition of total agent-system cost: inference, routing, communication, context duplication, verification, fallback/escalation, and orchestration.
+2. Derives a conditional break-even result showing that specialized multi-agent systems eventually become more expensive when coordination cost is increasing and unbounded.
+3. Provides a closed-form break-even formulation expressed in explicit resource units rather than treating reasoning turns as direct expenditure.
+4. Introduces a task-to-architecture decision framework based on decomposability, reasoning depth, context length, specialization opportunity, privacy, routing accuracy, escalation, latency, and baseline performance.
+5. Compares four architectures: single SLM, single LLM, multi-SLM, and hybrid SLM-LLM.
+6. Uses an illustrative deterministic scenario analysis across 80 constructed tasks to explore sensitivity under stated assumptions.
+
+KEY FINDINGS / TAKEAWAYS
+------------------------------------------------------------------------------
+1. SLMs are most attractive for narrow, repetitive, structured, predictable tasks.
+2. Coordination overhead can erase the savings produced by cheaper individual model calls.
+3. Reliability compounding can become the limiting factor before cost becomes the limiting factor.
+4. Dense communication, long shared context, sequential dependencies, and frequent escalation make multi-SLM architectures less attractive.
+5. Hybrid SLM-first architectures with selective LLM escalation appear promising for mixed workloads, but reliability remains a key constraint.
+6. Routing accuracy and confidence-gated escalation can act as partially redundant error-correction mechanisms.
+
+LIMITATIONS / IMPORTANT CAVEATS
+------------------------------------------------------------------------------
+1. The propositions are theoretical and await empirical validation.
+2. The 80-task analysis is an illustrative deterministic scenario analysis, not a model-inference experiment.
+3. Several scenario parameters are declared assumptions rather than measured deployment values.
+4. The cost model uses simplifying assumptions such as homogeneous small-model pricing and independent stage success.
+5. Capability placement across planner, orchestrator, verifier, and sub-agent roles remains unresolved.
+
+ABSTRACT
+------------------------------------------------------------------------------
+Small language models (SLMs) are increasingly proposed as economical substitutes for large language models (LLMs) inside agentic systems, on the argument that most agent invocations are narrow, repetitive, and well within a small model's competence. The argument is sound at the level of the individual call. This paper examines the level above it. Replacing one capable LLM agent with several specialized SLM agents introduces routing, inter-agent communication, context duplication, verification, escalation, and orchestration - costs that attach to the architecture rather than to any model within it. We synthesize evidence from the routing, cascade, and multi-agent coordination literatures, which have developed largely in isolation from one another, and propose a decomposition of agent-system cost that separates model-level from system-level terms. We price architectures in explicit resource units - input and output tokens, router, verifier, and orchestration - rather than treating reasoning turns as expenditure, and derive a conditional result: because savings are bounded above by the baseline system cost, a break-even agent count exists whenever coordination cost is eventually increasing and unbounded, a condition satisfied by any architecture in which agents share context or exchange messages. Where that break-even falls is a separate empirical question, and we give a closed form for it. An illustrative deterministic scenario analysis over 80 constructed tasks, whose coordination parameters are drawn where possible from published measurements, explores the region under stated assumptions. Two findings run against expectation: reliability compounding binds well before cost does, and routing accuracy and confidence-gated escalation act as partially redundant mechanisms. All propositions are theoretical and await empirical validation.
+
+STATUS: Manuscript (2026)
+
+END OF RESEARCH PAPER RECORD

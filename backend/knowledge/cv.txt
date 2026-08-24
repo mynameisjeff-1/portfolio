@@ -1,0 +1,42 @@
+
+HAMZA ASIM
+AI Engineer | Generative AI | Machine Learning | Agentic Systems
+asimh0596@gmail.com  |  +966 59 947 3849  |  Yanbu, Saudi Arabia
+PROFESSIONAL SUMMARY
+AI Engineer and Data Science graduate with hands-on experience building production-oriented generative AI, agentic automation, NLP and machine learning systems. Skilled in Python, LLM/RAG workflows, MCP, vector search, FastAPI, data pipelines and cloud deployment across AWS, Azure and GCP. Experienced delivering end-to-end AI solutions from data ingestion and model integration to APIs, orchestration, evaluation and deployment, with measurable gains in accuracy, retrieval speed and operational efficiency.
+CORE TECHNICAL SKILLS
+Generative AI &amp; Agents: Large Language Models (LLMs), RAG, AI Agents, Multi-Agent Systems, Model Context Protocol (MCP), MCP Servers, Tool/Function Calling, Prompt Engineering
+Retrieval &amp; LLM Systems: Embeddings, Semantic Search, Vector Databases, Qdrant, Context/State Management, Structured Outputs, LLM Orchestration
+Machine Learning &amp; NLP: Python, Scikit-learn, Pandas, NumPy, PySpark, NLP, Classification, Information Extraction, Feature Engineering, Model Evaluation
+Backend &amp; Data Engineering: FastAPI, REST APIs, PostgreSQL, Redis, Snowflake, Apache Airflow, SQL, ETL/Data Pipelines, Microservices
+Cloud &amp; DevOps: Docker, Git/GitHub, Linux, AWS, Azure, GCP, AWS RDS, API Integration, Model Deployment
+PROFESSIONAL EXPERIENCE
+<w:tab w:val="clear" w:pos="720"/><w:tab w:val="right" w:pos="10296" w:leader="none"/></w:tabs><w:spacing w:before="46" w:after="0"/><w:rPr></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:eastAsia="Arial"/></w:rPr><w:t>AI Engineer - Docwyn.ai (Wyoming, USA — Remote)<w:t xml:space="preserve">Feb 2024 – Present
+• Engineered Python/NLP document-intelligence workflows that converted unstructured business records into validated, query-ready outputs, improving extraction accuracy by 18%.
+• Orchestrated Apache Airflow pipelines consolidating operational data from 120+ US retail locations into Snowflake for downstream AI, search and automation services.
+• Optimized reusable Python/SQL processing components and Snowflake retrieval patterns, reducing data retrieval time by 40% across high-volume workflows.
+• Automated document-processing and backend data workflows, improving consistency across AI-ready data preparation, reporting and product operations.
+<w:tab w:val="clear" w:pos="720"/><w:tab w:val="right" w:pos="10296" w:leader="none"/></w:tabs><w:spacing w:before="46" w:after="0"/><w:rPr></w:rPr></w:pPr><w:r><w:rPr><w:rFonts w:eastAsia="Arial"/></w:rPr><w:t xml:space="preserve">AI Engineer Intern - Glowing Soft <w:t>Jul 2023 - Oct 2023
+• Built Python ML/NLP pipelines processing 500K+ records per day, automating ingestion, cleaning and transformation while reducing manual processing time by 40%.
+• Applied NLP classification and information extraction to contract datasets, converting free-form text into structured business fields and saving approximately 3 hours of manual review per day.
+• Delivered 3 production-ready analytical/ML models and optimized SQL workloads on AWS RDS by 35%, accelerating experimentation and client-facing model outputs.
+PROJECTS
+AI Voice Customer Support Agent  |  LLMs, FastAPI, Twilio, ElevenLabs, PostgreSQL, Redis, Docker, Microservices
+• Architected a real-time voice AI agent integrating telephony, speech-to-text, LLM tool calling, CRM/internal APIs and text-to-speech for context-aware customer support.
+• Built modular FastAPI services for orchestration, session state, authentication and CRM/ticketing, backed by PostgreSQL/Redis and Dockerized for independent scaling.
+• Implemented account/order lookup, ticket creation, conversation memory and human escalation with context handoff, connecting conversational AI to executable backend workflows.
+Multi-Agent Automation Platform with MCP Tooling  |  Python, MCP, FastAPI, Qdrant, PostgreSQL, Docker
+• Designed Planner, Retrieval, Execution and Validation agents to decompose, route, execute and verify complex multi-step requests through specialized responsibilities.
+• Built MCP client/server integrations exposing databases, vector search, document retrieval, files and REST services as discoverable agent tools.
+• Implemented RAG with embeddings/Qdrant, structured outputs, persistent state, retries and validation gates in Dockerized FastAPI services for reliable agent execution.
+AWARDS
+Global Top 50 - Google Gemini Hackathon 2024. Ranked among the global top 50 from 57,000+ participants across 160+ countries. Built an AI-driven agriculture platform (Arzachel) using NASA Earth-observation data, geospatial analytics and vision-language models for crop recommendations, yield insights, wildfire-risk alerts and sustainability guidance.
+
+RELOCATION
+Hamza is open to relocating for the right opportunity, depending on the role.
+PUBLICATIONS
+The Agreeable Swarm: Sycophantic Drift, Consensus Cascades, and Epistemic Collapse in Multi-Agent Large Language Model Systems (2026). Research on multi-agent LLM reliability; introduces the ESRD/MA-ESRD framework and Sycophancy Amplification Factor (SAF), and analyzes consensus cascades, correlated-agent failure and mitigation strategies.
+When Small Models Create Big Overhead: The Specialization-Coordination Trade-off in Hybrid SLM-LLM Agent Systems (2026, manuscript). Theoretical research on system-level efficiency in agentic AI; develops a coordination-cost framework, break-even analysis and architecture-selection framework for SLM, LLM, multi-SLM and hybrid agent systems.
+EDUCATION
+Bachelor in Data Science - University of Central Punjab, Lahore
+

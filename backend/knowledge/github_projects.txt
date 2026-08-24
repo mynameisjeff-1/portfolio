@@ -1,0 +1,160 @@
+HAMZA ASIM - GITHUB PROJECT KNOWLEDGE BASE
+Source Profile: https://github.com/mynameisjeff-1
+Purpose: Portfolio RAG / Qdrant knowledge ingestion
+Excluded Repository: priv
+
+======================================================================
+PROJECT 1
+======================================================================
+
+project_id: enterprise-realtime-voice-ai
+title: Enterprise Real-Time AI Voice Agent Platform
+source_type: github_project
+category: Voice AI, Generative AI, Agentic Systems
+repository_url: https://github.com/mynameisjeff-1/enterprise-realtime-voice-ai
+primary_language: Python
+tags: voice-ai, conversational-ai, generative-ai, ai-agents, fastapi, livekit, deepgram, elevenlabs, redis, websockets, docker, function-calling, customer-support
+
+SUMMARY:
+Enterprise Real-Time AI Voice Agent Platform is a conversational AI system designed for real-time voice interactions. The project connects speech recognition, large language model reasoning, function calling, and speech generation into a single low-latency conversational pipeline. It is designed around enterprise customer-support use cases where an AI voice agent must understand a caller, reason about the request, invoke business tools when necessary, and return a spoken response.
+
+MAIN FEATURES:
+- Real-time Speech-to-Text, LLM, and Text-to-Speech pipeline orchestration.
+- Streaming conversational interactions through WebSockets/WebRTC-oriented architecture.
+- Function calling for business operations such as order-status lookup, refunds, appointment scheduling, and human escalation.
+- FastAPI control plane for starting sessions, processing conversation turns, monitoring telemetry, and ending sessions.
+- Redis-based session state for conversation history, latency information, and tool-call tracking.
+- Docker and Docker Compose support for reproducible deployment.
+
+ARCHITECTURE:
+Customer voice is processed through a Speech-to-Text provider such as Deepgram or Azure. The resulting transcript is passed to an LLM such as OpenAI or Anthropic for reasoning and dialogue management. The model can invoke business tools through function calling. The final response is converted to audio through Text-to-Speech providers such as ElevenLabs or Cartesia. FastAPI manages the control plane while Redis maintains distributed session state.
+
+TECHNOLOGY STACK:
+Python, FastAPI, Pydantic, Uvicorn, Asyncio, WebSockets, LiveKit Agents, Deepgram, Azure Speech, OpenAI, Anthropic, ElevenLabs, Cartesia, Redis, PyAudio, NumPy, Docker, Docker Compose.
+
+======================================================================
+PROJECT 2
+======================================================================
+
+project_id: enterprise-document-intelligence
+title: Enterprise Document Intelligence & RAG Platform
+source_type: github_project
+category: Retrieval-Augmented Generation, Document AI, Vector Search
+repository_url: https://github.com/mynameisjeff-1/enterprise-document-intelligence
+primary_language: Python
+tags: rag, document-ai, qdrant, vector-database, semantic-search, embeddings, docling, fastapi, ocr, pymupdf, docker, information-extraction
+
+SUMMARY:
+Enterprise Document Intelligence & RAG Platform is a document-processing and Retrieval-Augmented Generation system for extracting, structuring, indexing, and retrieving information from complex business documents. It supports document layout understanding, semantic chunking, vector indexing, similarity search, and RAG-based question answering.
+
+MAIN FEATURES:
+- Ingestion of PDF, Microsoft Word, PowerPoint, and HTML content.
+- Extraction of structured layout information including tables, metadata, document hierarchy, and mathematical formulas.
+- Semantic window chunking with overlap to preserve context across document boundaries.
+- Qdrant vector database integration for embedding storage and similarity search.
+- Metadata-aware vector filtering and retrieval.
+- FastAPI endpoints for document ingestion, extraction, semantic search, and RAG queries.
+- OCR and document-processing support for complex source files.
+- Docker-based deployment for document services and Qdrant.
+
+ARCHITECTURE:
+Documents enter a parsing layer based on Docling and supporting document-processing tools. Parsed text and structure are converted into semantic chunks with contextual overlap. Chunks are embedded and indexed in Qdrant. A FastAPI layer exposes document ingestion, structured extraction, semantic search, and RAG query operations.
+
+TECHNOLOGY STACK:
+Python, Docling, FastAPI, Pydantic, Uvicorn, Qdrant, RapidOCR, PyMuPDF, Pandoc, Docker, Docker Compose.
+
+======================================================================
+PROJECT 3
+======================================================================
+
+project_id: autonomous-web-ops-agent
+title: Autonomous Web Operations Agent
+source_type: github_project
+category: Agentic AI, Browser Automation, Web Agents
+repository_url: https://github.com/mynameisjeff-1/autonomous-web-ops-agent
+primary_language: Python
+tags: ai-agent, agentic-ai, browser-automation, playwright, fastapi, pydantic, redis, asyncio, structured-extraction, web-agent, docker
+
+SUMMARY:
+Autonomous Web Operations Agent is an AI-driven browser automation platform that executes web tasks from high-level natural-language objectives. The system combines browser control, DOM analysis, task planning, action execution, and structured information extraction.
+
+MAIN FEATURES:
+- Natural-language task specification for autonomous browser workflows.
+- Playwright-based control of modern websites and multi-tab browser sessions.
+- DOM and page-structure analysis optimized for LLM reasoning.
+- Goal-directed planning and step-by-step action execution.
+- Structured Pydantic output schemas for reliable JSON extraction.
+- FastAPI endpoints for dispatching tasks, checking execution traces, and performing direct extraction.
+- Redis-compatible task queuing and state management.
+- Docker environment with browser binaries for Chromium, Firefox, and WebKit.
+
+ARCHITECTURE:
+A user submits a target URL and objective through the FastAPI control server. The agent inspects the website through Playwright, transforms DOM information into a representation suitable for reasoning, chooses actions based on the task objective, performs those actions in the browser, and stores structured results.
+
+TECHNOLOGY STACK:
+Python, Asyncio, Playwright, Chromium, FastAPI, Pydantic, Uvicorn, Redis, Celery/RQ-compatible task architecture, Docker, Docker Compose.
+
+======================================================================
+PROJECT 4
+======================================================================
+
+project_id: agentops-llm-observability
+title: AgentOps - LLM Evaluation & Observability Platform
+source_type: github_project
+category: LLMOps, AI Observability, LLM Evaluation
+repository_url: https://github.com/mynameisjeff-1/agentops-llm-observability
+primary_language: Python
+tags: llmops, observability, ai-agents, evaluation, tracing, hallucination, telemetry, fastapi, postgresql, token-cost, tool-calling, docker
+
+SUMMARY:
+AgentOps is an LLM evaluation and observability platform designed to track what happens inside AI-agent and LLM workflows. It records model generations, nested execution traces, tool calls, token usage, latency, cost, reliability information, and automated quality evaluations.
+
+MAIN FEATURES:
+- Tracing of LLM and agent execution workflows.
+- Recording of nested spans for model calls, retrievers, and tool invocations.
+- Token usage and estimated model-cost accounting.
+- Latency measurement including generation-performance metrics.
+- Tool-call reliability and error auditing.
+- Automated evaluation data for faithfulness, contextual relevance, and hallucination.
+- FastAPI telemetry gateway for ingesting traces and metrics.
+- PostgreSQL persistence for traces, spans, evaluations, and operational records.
+
+ARCHITECTURE:
+LLM applications and AI agents send telemetry to a FastAPI gateway. The platform organizes events into traces and spans, records model generations and tool calls, calculates token/cost information, and persists records in PostgreSQL.
+
+TECHNOLOGY STACK:
+Python, Asyncio, FastAPI, Pydantic, Uvicorn, PostgreSQL 16, Psycopg2, Docker, Docker Compose.
+
+======================================================================
+PROJECT 5
+======================================================================
+
+project_id: arzachel
+title: Arzachel - Google Gemini Hackathon Project
+source_type: github_project
+category: Multimodal AI, Geospatial AI, Precision Agriculture
+repository_url: https://github.com/mynameisjeff-1/Arzachel
+primary_language: Python
+tags: nasa-space-apps, nasa, geospatial-ai, precision-agriculture, earth-observation, multimodal-ai, llama-vision, streamlit, folium, soilgrids, climate, wildfire, docker
+
+SUMMARY:
+Arzachel is an AI-driven Earth Observation and Precision Agriculture platform developed for the Google Gemini Hackathon. The project combines Earth-observation information, global soil data, geospatial analysis, interactive mapping, and multimodal AI to generate agricultural and environmental insights. This is the project behind Hamza's Global Top 50 result at the Google Gemini Hackathon 2024.
+
+MAIN FEATURES:
+- Geospatial soil analysis using SoilGrids data.
+- Analysis of soil properties such as pH, organic matter, nutrient composition, and moisture-related information.
+- NASA satellite and environmental data integration for weather and Earth-observation insights.
+- Historical and current environmental trend analysis.
+- AI-assisted crop recommendations and planting-related insights.
+- Wildfire proximity and environmental-risk monitoring.
+- Interactive Folium maps for drawing and analyzing geographic areas.
+- Streamlit dashboard for displaying field information, recommendations, maps, and environmental intelligence.
+- Multimodal/vision-language AI integration through Together AI and LLaMA-based vision models.
+
+ARCHITECTURE:
+NASA Earth-observation datasets and soil/environmental sources feed a data-processing layer using Python data and geospatial libraries. Processed information can be analyzed using multimodal AI models for crop and environmental intelligence. Results are presented through an interactive Streamlit dashboard with Folium-based geospatial visualization.
+
+TECHNOLOGY STACK:
+Python, Streamlit, Streamlit-Folium, Folium, Pygeohydro, PyGridMet, Pandas, NumPy, NASA Earth-observation data, ISRIC SoilGrids, Together AI, LLaMA 3.2 Vision, OpenAI API, Docker, Docker Compose.
+
+END OF GITHUB PROJECT KNOWLEDGE BASE
