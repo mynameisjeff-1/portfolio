@@ -3,19 +3,21 @@ const crypto = require("crypto");
 // Splits on blank-line-separated blocks, then regroups into ~sized chunks
 // so we don't split mid-thought but also don't ship one giant blob per file.
 function chunkText(text, { maxChars = 1200, minChars = 200 } = {}) {
-  let blocks = text
+  const paragraphBlocks = text
     .split(/\n\s*\n/)
     .map((b) => b.trim())
     .filter(Boolean);
 
-  // Documents with no blank-line paragraph breaks (e.g. a CV exported as one
-  // dense block) fall back to splitting on single line breaks instead.
-  if (blocks.length <= 1 && text.length > maxChars) {
-    blocks = text
+  // Any individual block that is still oversized (e.g. a dense CV section
+  // with no blank lines inside it) gets broken down further by single line
+  // breaks, rather than only checking this once for the whole document.
+  const blocks = paragraphBlocks.flatMap((block) => {
+    if (block.length <= maxChars) return [block];
+    return block
       .split(/\n/)
       .map((b) => b.trim())
       .filter(Boolean);
-  }
+  });
 
   const chunks = [];
   let current = "";

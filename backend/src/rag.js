@@ -7,7 +7,9 @@ const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GROQ_MODEL = "openai/gpt-oss-120b";
 const VECTOR_SIZE = 768;
 const COLLECTION = process.env.QDRANT_COLLECTION || "portfolio_knowledge";
-const TOP_K = 8;
+const TOP_K = 10;
+const CANDIDATE_POOL = 25;
+const MIN_CV_CHUNKS = 2;
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 const qdrant = new QdrantClient({ url: process.env.QDRANT_URL, apiKey: process.env.QDRANT_API_KEY });
@@ -22,14 +24,21 @@ async function embedQuery(text) {
   return res.embeddings[0].values;
 }
 
+// The knowledge base mixes source types with very different keyword density
+// — research paper abstracts are dense with terms like "multi-agent" and can
+// out-rank the CV's terser bullet points for the same query even when the
+// CV chunk is the more directly relevant answer. Pulling a larger candidate
+// pool and guaranteeing a floor of CV chunks keeps biographical/project facts
+// from being crowded out entirely by semantically-adjacent research content.
 async function retrieve(searchQuery) {
   const vector = await embedQuery(searchQuery);
   const result = await qdrant.query(COLLECTION, {
     query: vector,
-    limit: TOP_K,
+    limit: CANDIDATE_POOL,
     with_payload: true,
   });
-  return result.points.map((p) => ({
+
+  const candidates = result.points.map((p) => ({
     score: p.score,
     text: p.payload.text,
     source_type: p.payload.source_type,
@@ -37,6 +46,26 @@ async function retrieve(searchQuery) {
     project: p.payload.project,
     url: p.payload.url,
   }));
+
+  const top = candidates.slice(0, TOP_K);
+  const cvInTop = top.filter((c) => c.source_type === "cv").length;
+
+  if (cvInTop < MIN_CV_CHUNKS) {
+    const extraCv = candidates
+      .filter((c) => c.source_type === "cv" && !top.includes(c))
+      .slice(0, MIN_CV_CHUNKS - cvInTop);
+    // Make room by dropping the lowest-scoring non-CV chunks currently in top.
+    for (const cv of extraCv) {
+      const dropIndex = [...top]
+        .map((c, i) => ({ c, i }))
+        .reverse()
+        .find(({ c }) => c.source_type !== "cv")?.i;
+      if (dropIndex !== undefined) top.splice(dropIndex, 1);
+      top.push(cv);
+    }
+  }
+
+  return top;
 }
 
 function buildContext(chunks) {
