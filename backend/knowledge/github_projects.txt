@@ -8,29 +8,29 @@ PROJECT 1
 ======================================================================
 
 project_id: enterprise-realtime-voice-ai
-title: Enterprise Real-Time AI Voice Agent Platform
+title: Autonomous Voice Sales and Service Agent (CRM Integrated)
 source_type: github_project
 category: Voice AI, Generative AI, Agentic Systems
 repository_url: https://github.com/mynameisjeff-1/enterprise-realtime-voice-ai
 primary_language: Python
-tags: voice-ai, conversational-ai, generative-ai, ai-agents, fastapi, livekit, deepgram, elevenlabs, redis, websockets, docker, function-calling, customer-support
+tags: voice-ai, conversational-ai, generative-ai, ai-agents, fastapi, twilio, deepgram, elevenlabs, postgresql, docker, kubernetes, aws, reinforcement-learning, crm, sales
 
 SUMMARY:
-Enterprise Real-Time AI Voice Agent Platform is a conversational AI system designed for real-time voice interactions. The project connects speech recognition, large language model reasoning, function calling, and speech generation into a single low-latency conversational pipeline. It is designed around enterprise customer-support use cases where an AI voice agent must understand a caller, reason about the request, invoke business tools when necessary, and return a spoken response.
+Autonomous Voice Sales and Service Agent is a multi-tenant voice AI system for outbound sales and inbound support. It pipelines telephony, speech-to-text, LLM tool calling and speech synthesis to hold turn latency near 800ms across 50+ concurrent calls, and connects to CRM and product databases for live inventory, quotes and confirmed orders mid-call.
 
 MAIN FEATURES:
-- Real-time Speech-to-Text, LLM, and Text-to-Speech pipeline orchestration.
-- Streaming conversational interactions through WebSockets/WebRTC-oriented architecture.
-- Function calling for business operations such as order-status lookup, refunds, appointment scheduling, and human escalation.
-- FastAPI control plane for starting sessions, processing conversation turns, monitoring telemetry, and ending sessions.
-- Redis-based session state for conversation history, latency information, and tool-call tracking.
-- Docker and Docker Compose support for reproducible deployment.
+- Multi-tenant real-time voice pipeline for both outbound sales and inbound support use cases.
+- Turn latency held near 800ms across 50+ concurrent calls.
+- Live CRM and product database integration for inventory, quotes and confirmed orders during the call.
+- Transcript analysis covering intent, sentiment, churn risk and upsell signals, written back to CRM.
+- A reinforcement learning layer trained over call outcomes to tune pitch sequencing and objection handling, lifting test conversion by 22%.
+- Packaged as configurable microservices on Kubernetes so a new business can onboard in under a day.
 
 ARCHITECTURE:
-Customer voice is processed through a Speech-to-Text provider such as Deepgram or Azure. The resulting transcript is passed to an LLM such as OpenAI or Anthropic for reasoning and dialogue management. The model can invoke business tools through function calling. The final response is converted to audio through Text-to-Speech providers such as ElevenLabs or Cartesia. FastAPI manages the control plane while Redis maintains distributed session state.
+Customer voice is processed through Deepgram for speech-to-text. The transcript is passed to an LLM for reasoning, tool calling and dialogue management, which can query CRM and product databases live during the call. The response is converted to audio through ElevenLabs. Telephony is handled via Twilio. A reinforcement learning layer trained on call outcomes tunes pitch sequencing and objection handling over time. PostgreSQL persists CRM-linked state, and the system is packaged as configurable microservices on Kubernetes for fast multi-tenant onboarding.
 
 TECHNOLOGY STACK:
-Python, FastAPI, Pydantic, Uvicorn, Asyncio, WebSockets, LiveKit Agents, Deepgram, Azure Speech, OpenAI, Anthropic, ElevenLabs, Cartesia, Redis, PyAudio, NumPy, Docker, Docker Compose.
+Python, FastAPI, Twilio, Deepgram, ElevenLabs, PostgreSQL, Docker, Kubernetes, AWS, Reinforcement Learning.
 
 ======================================================================
 PROJECT 2

@@ -14,6 +14,9 @@ export function Footer() {
               {education.degree}
             </p>
             <p style={{ color: "var(--ink-secondary)" }}>{education.institution}</p>
+            <p className="font-mono-label mt-2" style={{ color: "var(--ink-secondary)" }}>
+              {education.dateRange}
+            </p>
           </Reveal>
 
           <Reveal className="md:col-span-8" delay={0.05}>

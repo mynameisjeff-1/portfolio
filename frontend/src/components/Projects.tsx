@@ -44,19 +44,25 @@ export function Projects() {
                       color: "var(--ink)",
                     }}
                   >
-                    {project.title}
+                    {project.displayTitle}
                   </h3>
-                  <a
-                    href={project.repoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover-underline font-mono-label inline-flex items-center gap-1.5"
-                    style={{ color: "var(--ink-secondary)" }}
-                    aria-label={`View ${project.title} repository on GitHub`}
-                  >
-                    <ExternalLink size={13} aria-hidden="true" />
-                    Repo
-                  </a>
+                  {project.repoUrl ? (
+                    <a
+                      href={project.repoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover-underline font-mono-label inline-flex items-center gap-1.5"
+                      style={{ color: "var(--ink-secondary)" }}
+                      aria-label={`View ${project.displayTitle} repository on GitHub`}
+                    >
+                      <ExternalLink size={13} aria-hidden="true" />
+                      Repo
+                    </a>
+                  ) : (
+                    <span className="font-mono-label" style={{ color: "var(--ink-secondary)", opacity: 0.5 }}>
+                      Private repo
+                    </span>
+                  )}
                 </div>
                 <p className="font-mono-label mb-10" style={{ color: "var(--ink-secondary)" }}>
                   {project.techStack.join("  ·  ")}
