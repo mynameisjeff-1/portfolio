@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 // and groq-sdk, the same module graph /api/chat needs, so the instance's cold
 // start is paid here (triggered on page load) instead of on the visitor's
 // first real question.
-import "./_lib/rag";
+import "./_lib/rag.js";
 
 export default function handler(_req: VercelRequest, res: VercelResponse) {
   res.status(204).end();

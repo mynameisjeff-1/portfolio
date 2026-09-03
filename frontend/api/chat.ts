@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { answer, type HistoryMessage } from "./_lib/rag";
+import { answer, type HistoryMessage } from "./_lib/rag.js";
 
 export const config = {
   runtime: "nodejs",
