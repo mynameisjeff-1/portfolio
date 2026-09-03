@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTheme } from "./hooks/useTheme";
 import { Nav } from "./components/Nav";
 import { Hero } from "./components/Hero";
@@ -13,6 +14,13 @@ import { Grain } from "./components/Grain";
 
 function App() {
   const { theme, toggle } = useTheme();
+
+  useEffect(() => {
+    // Fire-and-forget: wakes the chat serverless function as soon as the
+    // page loads, so its cold start is paid before the visitor reaches the
+    // chat section and asks their first question.
+    fetch("/api/warmup").catch(() => {});
+  }, []);
 
   return (
     <>

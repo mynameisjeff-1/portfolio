@@ -49,6 +49,8 @@ export const skills: SkillCategory[] = [
       "Embeddings",
       "Vector Databases",
       "Qdrant",
+      "FAISS",
+      "Chroma",
       "Hybrid Search",
       "Reranking",
       "Knowledge Graphs",
@@ -119,6 +121,17 @@ export const experience: ExperienceRole[] = [
       "Cut turnaround on daily document batches from 6 hours to under 45 minutes by parallelising extraction across worker queues and batching inference.",
       "Shipped an internal RAG assistant over the processed document store, letting operations staff answer record-level questions in seconds.",
       "Orchestrated Apache Airflow pipelines consolidating data from 120+ US retail locations into Snowflake, cutting retrieval time 40% by rewriting query patterns and standardising reusable Python and SQL components.",
+    ],
+  },
+  {
+    title: "Machine Learning Engineer",
+    company: "Omdena (New York, USA, Remote, Contract)",
+    dateRange: "Jan 2025 – Jun 2025",
+    bullets: [
+      "Built an agentic mental health support system on a four-stage LangGraph pipeline (Triage, Retrieval, Response, Safety Validation), with conditional edges, retry limits and deterministic routing keeping clinical decisions out of the model's hands.",
+      "Grounded replies in a RAG layer over curated mental health resources using sentence embeddings with FAISS and Chroma, replacing open-ended generation with retrieval-backed answers.",
+      "Implemented structured risk scoring with Pydantic schemas across self-harm language, hopelessness, severe distress and repeated high-risk intent, escalating at a configurable threshold or immediately on critical cues.",
+      "Routed escalations through FastAPI, PostgreSQL, Redis and Twilio/SendGrid to alert therapists with risk category, conversation ID and context summary, and traced agent paths, token use, latency and escalation events in LangSmith.",
     ],
   },
   {

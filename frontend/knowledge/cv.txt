@@ -12,7 +12,7 @@ Hamza is open to relocating for the right opportunity, depending on the role.
 
 TECHNICAL SKILLS
 LLM and Agents: RAG, GraphRAG, Multi-Agent Systems, Model Context Protocol (MCP), Tool and Function Calling, LangChain, LangGraph, LlamaIndex, LangSmith, Guardrails, LLM Evaluation, Reinforcement Learning
-Retrieval and Knowledge: Embeddings, Vector Databases, Qdrant, Hybrid Search, Reranking, Knowledge Graphs, Neo4j
+Retrieval and Knowledge: Embeddings, Vector Databases, Qdrant, FAISS, Chroma, Hybrid Search, Reranking, Knowledge Graphs, Neo4j
 Document AI and NLP: OCR, AWS Textract, PaddleOCR, Tesseract, Layout Parsing, Table Extraction, Information Extraction, Text Classification, spaCy, Hugging Face Transformers, LoRA and PEFT Fine Tuning
 Backend and Data: Python, FastAPI, REST APIs, Microservices, PostgreSQL, Redis, SQL, Snowflake, Apache Airflow, ETL Pipelines
 Cloud and MLOps: Docker, Kubernetes, AWS (Bedrock, Lambda, S3, RDS), GCP, GitHub Actions, CI/CD, Twilio, Deepgram
@@ -25,6 +25,12 @@ AI Engineer, Docwyn.ai (Wyoming, USA, Remote), Feb 2024 to Present
 - Cut turnaround on daily document batches from 6 hours to under 45 minutes by parallelising extraction across worker queues and batching inference.
 - Shipped an internal RAG assistant over the processed document store, letting operations staff answer record level questions in seconds.
 - Orchestrated Apache Airflow pipelines consolidating data from 120+ US retail locations into Snowflake, cutting retrieval time 40% by rewriting query patterns and standardising reusable Python and SQL components.
+
+Machine Learning Engineer, Omdena (New York, USA, Remote, Contract), Jan 2025 to Jun 2025
+- Built an agentic mental health support system on a four stage LangGraph pipeline (Triage, Retrieval, Response, Safety Validation), with conditional edges, retry limits and deterministic routing keeping clinical decisions out of the model's hands.
+- Grounded replies in a RAG layer over curated mental health resources using sentence embeddings with FAISS and Chroma, replacing open ended generation with retrieval backed answers.
+- Implemented structured risk scoring with Pydantic schemas across self harm language, hopelessness, severe distress and repeated high risk intent, escalating at a configurable threshold or immediately on critical cues.
+- Routed escalations through FastAPI, PostgreSQL, Redis and Twilio/SendGrid to alert therapists with risk category, conversation ID and context summary, and traced agent paths, token use, latency and escalation events in LangSmith.
 
 AI Engineer Intern, Glowing Soft (Lahore, Pakistan), Jul 2023 to Oct 2023
 - Built Python NLP pipelines processing 500K+ records per day, automating ingestion, cleaning and transformation and cutting manual work 40%.

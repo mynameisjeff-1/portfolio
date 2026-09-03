@@ -1,9 +1,14 @@
-require("dotenv").config({ path: require("path").join(__dirname, "..", ".env") });
-const fs = require("fs");
-const path = require("path");
-const { GoogleGenAI } = require("@google/genai");
-const { QdrantClient } = require("@qdrant/js-client-rest");
-const { chunkText, stableId } = require("../src/chunk");
+// Local-only ingestion script — run manually with `npm run ingest` after
+// editing anything in knowledge/. Not deployed as part of the Vercel build.
+import "dotenv/config";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { GoogleGenAI } from "@google/genai";
+import { QdrantClient } from "@qdrant/js-client-rest";
+import { chunkText, stableId } from "../api/_lib/chunk.ts";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const VECTOR_SIZE = 768;
@@ -11,12 +16,7 @@ const COLLECTION = process.env.QDRANT_COLLECTION || "portfolio_knowledge";
 const KNOWLEDGE_DIR = path.join(__dirname, "..", "knowledge");
 
 const SOURCES = [
-  {
-    file: "cv.txt",
-    source_type: "cv",
-    title: "Hamza Asim - CV",
-    url: "/cv.pdf",
-  },
+  { file: "cv.txt", source_type: "cv", title: "Hamza Asim - CV", url: "/cv.pdf" },
   {
     file: "volunteer_akhuwat.txt",
     source_type: "volunteer_experience",
@@ -84,8 +84,6 @@ async function ensureCollection(client) {
     console.log(`Collection "${COLLECTION}" already exists`);
   }
 
-  // Needed so points can be deleted by filename before re-upserting a file's
-  // chunks (Qdrant requires an index to filter-delete on a payload field).
   await client.createPayloadIndex(COLLECTION, {
     field_name: "filename",
     field_schema: "keyword",
@@ -112,10 +110,6 @@ async function main() {
     console.log(`${source.file}: ${chunks.length} chunks`);
     totalChunks += chunks.length;
 
-    // Purge any previously-ingested points for this file before upserting the
-    // current chunk set. Content-hash IDs make re-running on unchanged text a
-    // true no-op, but an edited file would otherwise leave its old chunks
-    // behind as stale, contradictory orphans instead of being replaced.
     await client.delete(COLLECTION, {
       filter: { must: [{ key: "filename", match: { value: source.file } }] },
       wait: true,

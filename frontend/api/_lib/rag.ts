@@ -1,6 +1,6 @@
-const { GoogleGenAI } = require("@google/genai");
-const { QdrantClient } = require("@qdrant/js-client-rest");
-const Groq = require("groq-sdk");
+import { GoogleGenAI } from "@google/genai";
+import { QdrantClient } from "@qdrant/js-client-rest";
+import Groq from "groq-sdk";
 
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
@@ -10,18 +10,46 @@ const COLLECTION = process.env.QDRANT_COLLECTION || "portfolio_knowledge";
 const TOP_K = 10;
 const CANDIDATE_POOL = 25;
 const MIN_CV_CHUNKS = 2;
+const MAX_HISTORY_TURNS = 8;
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-const qdrant = new QdrantClient({ url: process.env.QDRANT_URL, apiKey: process.env.QDRANT_API_KEY });
-const groq = process.env.GROQ_API_KEY ? new Groq({ apiKey: process.env.GROQ_API_KEY }) : null;
+export interface HistoryMessage {
+  role: "user" | "assistant";
+  text: string;
+}
 
-async function embedQuery(text) {
-  const res = await ai.models.embedContent({
+interface RetrievedChunk {
+  score: number;
+  text: string;
+  source_type: string;
+  title?: string;
+  project?: string;
+  url?: string;
+}
+
+let _ai: GoogleGenAI | null = null;
+let _qdrant: QdrantClient | null = null;
+let _groq: Groq | null = null;
+
+function ai() {
+  if (!_ai) _ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  return _ai;
+}
+function qdrant() {
+  if (!_qdrant) _qdrant = new QdrantClient({ url: process.env.QDRANT_URL, apiKey: process.env.QDRANT_API_KEY });
+  return _qdrant;
+}
+function groq() {
+  if (!_groq && process.env.GROQ_API_KEY) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  return _groq;
+}
+
+async function embedQuery(text: string) {
+  const res = await ai().models.embedContent({
     model: EMBEDDING_MODEL,
     contents: text,
     config: { taskType: "RETRIEVAL_QUERY", outputDimensionality: VECTOR_SIZE },
   });
-  return res.embeddings[0].values;
+  return res.embeddings![0].values!;
 }
 
 // The knowledge base mixes source types with very different keyword density
@@ -30,15 +58,15 @@ async function embedQuery(text) {
 // CV chunk is the more directly relevant answer. Pulling a larger candidate
 // pool and guaranteeing a floor of CV chunks keeps biographical/project facts
 // from being crowded out entirely by semantically-adjacent research content.
-async function retrieve(searchQuery) {
+export async function retrieve(searchQuery: string): Promise<RetrievedChunk[]> {
   const vector = await embedQuery(searchQuery);
-  const result = await qdrant.query(COLLECTION, {
+  const result = await qdrant().query(COLLECTION, {
     query: vector,
     limit: CANDIDATE_POOL,
     with_payload: true,
   });
 
-  const candidates = result.points.map((p) => ({
+  const candidates: RetrievedChunk[] = result.points.map((p: any) => ({
     score: p.score,
     text: p.payload.text,
     source_type: p.payload.source_type,
@@ -68,18 +96,13 @@ async function retrieve(searchQuery) {
   return top;
 }
 
-function buildContext(chunks) {
+function buildContext(chunks: RetrievedChunk[]) {
   return chunks
-    .map(
-      (c, i) =>
-        `[${i + 1}] (${c.source_type}${c.title ? ` — ${c.title}` : ""})\n${c.text}`
-    )
+    .map((c, i) => `[${i + 1}] (${c.source_type}${c.title ? ` — ${c.title}` : ""})\n${c.text}`)
     .join("\n\n---\n\n");
 }
 
-const MAX_HISTORY_TURNS = 8;
-
-function formatHistory(history) {
+function formatHistory(history: HistoryMessage[]) {
   if (!Array.isArray(history)) return "";
   return history
     .slice(-MAX_HISTORY_TURNS)
@@ -98,14 +121,14 @@ Rules:
 - Never answer the question yourself. Only rewrite it.
 - If the message is NOT actually asking for information — a reaction, acknowledgment, or comment like "wow", "impressive", "cool", "nice", "thanks", "ok", "lol", or similar — output exactly: NO_RETRIEVAL_NEEDED. Do not rewrite these into a question.`;
 
-async function contextualizeQuery(question, history) {
+async function contextualizeQuery(question: string, history: HistoryMessage[]) {
   const historyText = formatHistory(history);
   if (!historyText) return question;
 
   const prompt = `Conversation so far:\n${historyText}\n\nFollow-up question: "${question}"\n\nRewritten standalone search query:`;
 
   try {
-    const result = await ai.models.generateContent({
+    const result = await ai().models.generateContent({
       model: GEMINI_MODEL,
       contents: prompt,
       config: {
@@ -116,9 +139,7 @@ async function contextualizeQuery(question, history) {
     });
     const rewritten = (result.text || "").trim();
     return rewritten || question;
-  } catch (err) {
-    // Contextualization is a nice-to-have; fall back to the raw question
-    // rather than failing the whole request if this one call errors.
+  } catch (err: any) {
     console.warn("Query contextualization failed, using raw question:", err.message || err);
     return question;
   }
@@ -148,20 +169,20 @@ Conversational style: write like a knowledgeable person having a conversation, n
 
 Personality: you're a sharp, confident portfolio assistant, not a corporate brochure. Professional and concise, but with actual personality — occasionally, where it genuinely fits (a technical aside, a transition between topics, a dry observation about scale or complexity), let a little understated wit come through. This should be rare and light, never forced, never a pun, never present in every answer, and never at the expense of clarity or accuracy. Think one dry aside every several turns, not a joke per paragraph.`;
 
-function sleep(ms) {
+function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // Gemini-side errors that mean "try the fallback provider" rather than
 // "give up" — capacity/quota problems, not a bad request.
-function isRetryableGeminiError(err) {
+function isRetryableGeminiError(err: any) {
   const status = err.status || err.code;
   const message = err.message || "";
   return status === 503 || status === 429 || message.includes("503") || message.includes("429");
 }
 
-async function* geminiStream(prompt) {
-  const stream = await ai.models.generateContentStream({
+async function* geminiStream(prompt: string) {
+  const stream = await ai().models.generateContentStream({
     model: GEMINI_MODEL,
     contents: prompt,
     config: {
@@ -177,8 +198,9 @@ async function* geminiStream(prompt) {
   }
 }
 
-async function* groqStream(prompt) {
-  const stream = await groq.chat.completions.create({
+async function* groqStream(prompt: string) {
+  const client = groq()!;
+  const stream = await client.chat.completions.create({
     model: GROQ_MODEL,
     messages: [
       { role: "system", content: SYSTEM_INSTRUCTION },
@@ -197,7 +219,7 @@ async function* groqStream(prompt) {
   }
 }
 
-async function generateStream(prompt, { retries = 2 } = {}) {
+async function generateStream(prompt: string, { retries = 2 } = {}): Promise<AsyncGenerator<{ text: string }>> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const gen = geminiStream(prompt);
@@ -207,21 +229,22 @@ async function generateStream(prompt, { retries = 2 } = {}) {
         if (!first.done) yield first.value;
         for await (const chunk of gen) yield chunk;
       })();
-    } catch (err) {
+    } catch (err: any) {
       if (isRetryableGeminiError(err) && attempt < retries) {
         await sleep(500 * Math.pow(2, attempt));
         continue;
       }
-      if (isRetryableGeminiError(err) && groq) {
+      if (isRetryableGeminiError(err) && groq()) {
         console.warn("Gemini unavailable, falling back to Groq:", err.message || err);
         return groqStream(prompt);
       }
       throw err;
     }
   }
+  throw new Error("generateStream: exhausted retries");
 }
 
-async function answer(question, history = []) {
+export async function answer(question: string, history: HistoryMessage[] = []) {
   const searchQuery = await contextualizeQuery(question, history);
   const historyText = formatHistory(history);
   const needsRetrieval = searchQuery.trim() !== "NO_RETRIEVAL_NEEDED";
@@ -247,5 +270,3 @@ async function answer(question, history = []) {
 
   return { stream, sources: chunks, searchQuery };
 }
-
-module.exports = { retrieve, answer, buildContext };

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Reveal } from "./Reveal";
 
-const API_URL = import.meta.env.VITE_RAG_API_URL || "http://localhost:8787";
-
 interface Message {
   role: "user" | "assistant";
   text: string;
@@ -72,7 +70,7 @@ export function Chat() {
         // more about it" without carrying the whole conversation every time.
         const history = messages.slice(-8).map((m) => ({ role: m.role, text: m.text }));
 
-        const response = await fetch(`${API_URL}/api/chat`, {
+        const response = await fetch(`/api/chat`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ question: trimmed, history }),
