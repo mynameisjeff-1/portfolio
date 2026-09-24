@@ -4,7 +4,7 @@ import Groq from "groq-sdk";
 
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
-const GROQ_MODEL = "openai/gpt-oss-120b";
+const GROQ_MODEL = "llama-3.3-70b-versatile";
 const VECTOR_SIZE = 768;
 const COLLECTION = process.env.QDRANT_COLLECTION || "portfolio_knowledge";
 const TOP_K = 10;
@@ -44,11 +44,15 @@ function groq() {
 }
 
 async function embedQuery(text: string) {
-  const res = await ai().models.embedContent({
-    model: EMBEDDING_MODEL,
-    contents: text,
-    config: { taskType: "RETRIEVAL_QUERY", outputDimensionality: VECTOR_SIZE },
-  });
+  const res = await withTimeout(
+    ai().models.embedContent({
+      model: EMBEDDING_MODEL,
+      contents: text,
+      config: { taskType: "RETRIEVAL_QUERY", outputDimensionality: VECTOR_SIZE },
+    }),
+    15000,
+    "Gemini embedding"
+  );
   return res.embeddings![0].values!;
 }
 
@@ -128,15 +132,19 @@ async function contextualizeQuery(question: string, history: HistoryMessage[]) {
   const prompt = `Conversation so far:\n${historyText}\n\nFollow-up question: "${question}"\n\nRewritten standalone search query:`;
 
   try {
-    const result = await ai().models.generateContent({
-      model: GEMINI_MODEL,
-      contents: prompt,
-      config: {
-        systemInstruction: CONTEXTUALIZE_INSTRUCTION,
-        temperature: 0,
-        maxOutputTokens: 100,
-      },
-    });
+    const result = await withTimeout(
+      ai().models.generateContent({
+        model: GEMINI_MODEL,
+        contents: prompt,
+        config: {
+          systemInstruction: CONTEXTUALIZE_INSTRUCTION,
+          temperature: 0,
+          maxOutputTokens: 100,
+        },
+      }),
+      15000,
+      "Gemini contextualization"
+    );
     const rewritten = (result.text || "").trim();
     return rewritten || question;
   } catch (err: any) {
@@ -173,57 +181,93 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+
+  return await Promise.race([
+    promise,
+    new Promise<T>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+    }),
+  ]).finally(() => {
+    if (timer) clearTimeout(timer);
+  });
+}
+
 // Gemini-side errors that mean "try the fallback provider" rather than
 // "give up" — capacity/quota problems, not a bad request.
 function isRetryableGeminiError(err: any) {
   const status = err.status || err.code;
   const message = err.message || "";
-  return status === 503 || status === 429 || message.includes("503") || message.includes("429");
+  return (
+    status === 503 ||
+    status === 429 ||
+    message.includes("503") ||
+    message.includes("429") ||
+    message.includes("timed out") ||
+    message.includes("timeout")
+  );
 }
 
 async function* geminiStream(prompt: string) {
-  const stream = await ai().models.generateContentStream({
-    model: GEMINI_MODEL,
-    contents: prompt,
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.4,
-      topP: 0.9,
-      maxOutputTokens: 900,
-    },
-  });
-  for await (const chunk of stream) {
-    const text = chunk.text || "";
+  const stream = await withTimeout(
+    ai().models.generateContentStream({
+      model: GEMINI_MODEL,
+      contents: prompt,
+      config: {
+        systemInstruction: SYSTEM_INSTRUCTION,
+        temperature: 0.4,
+        topP: 0.9,
+        maxOutputTokens: 900,
+      },
+    }),
+    15000,
+    "Gemini stream start"
+  );
+
+  const iterator = stream[Symbol.asyncIterator]();
+  while (true) {
+    const next = await withTimeout(iterator.next(), 15000, "Gemini stream chunk");
+    if (next.done) break;
+
+    const text = next.value.text || "";
     if (text) yield { text };
   }
 }
 
 async function* groqStream(prompt: string) {
   const client = groq()!;
-  const stream = await client.chat.completions.create({
-    model: GROQ_MODEL,
-    messages: [
-      { role: "system", content: SYSTEM_INSTRUCTION },
-      { role: "user", content: prompt },
-    ],
-    temperature: 0.4,
-    top_p: 0.9,
-    max_completion_tokens: 900,
-    stream: true,
-  });
-  for await (const chunk of stream) {
-    // gpt-oss models stream a separate "reasoning" channel alongside the
-    // real answer — only forward delta.content, never the reasoning trace.
-    const text = chunk.choices[0]?.delta?.content || "";
+  const stream = await withTimeout(
+    client.chat.completions.create({
+      model: GROQ_MODEL,
+      messages: [
+        { role: "system", content: SYSTEM_INSTRUCTION },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.4,
+      top_p: 0.9,
+      max_completion_tokens: 900,
+      stream: true,
+    }),
+    20000,
+    "Groq completion"
+  );
+
+  const iterator = stream[Symbol.asyncIterator]();
+  while (true) {
+    const next = await withTimeout(iterator.next(), 20000, "Groq stream chunk");
+    if (next.done) break;
+
+    const text = next.value.choices[0]?.delta?.content || "";
     if (text) yield { text };
   }
 }
 
-async function generateStream(prompt: string, { retries = 0 } = {}): Promise<AsyncGenerator<{ text: string }>> {
+async function generateStream(prompt: string, { retries = 2 } = {}): Promise<AsyncGenerator<{ text: string }>> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const gen = geminiStream(prompt);
-      const first = await gen.next();
+      const first = await withTimeout(gen.next(), 15000, "Gemini first response");
       // Wrap so the already-consumed first chunk isn't lost.
       return (async function* () {
         if (!first.done) yield first.value;
@@ -231,6 +275,7 @@ async function generateStream(prompt: string, { retries = 0 } = {}): Promise<Asy
       })();
     } catch (err: any) {
       if (isRetryableGeminiError(err) && attempt < retries) {
+        console.warn(`Gemini attempt ${attempt + 1} failed, retrying:`, err.message || err);
         await sleep(500 * Math.pow(2, attempt));
         continue;
       }
