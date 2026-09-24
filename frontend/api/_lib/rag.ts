@@ -11,6 +11,9 @@ const TOP_K = 10;
 const CANDIDATE_POOL = 25;
 const MIN_CV_CHUNKS = 2;
 const MAX_HISTORY_TURNS = 8;
+const CONTEXTUALIZE_TIMEOUT_MS = 8000;
+const GEMINI_TIMEOUT_MS = 12000;
+const GROQ_TIMEOUT_MS = 20000;
 
 export interface HistoryMessage {
   role: "user" | "assistant";
@@ -50,7 +53,7 @@ async function embedQuery(text: string) {
       contents: text,
       config: { taskType: "RETRIEVAL_QUERY", outputDimensionality: VECTOR_SIZE },
     }),
-    15000,
+    GEMINI_TIMEOUT_MS,
     "Gemini embedding"
   );
   return res.embeddings![0].values!;
@@ -142,12 +145,16 @@ async function contextualizeQuery(question: string, history: HistoryMessage[]) {
           maxOutputTokens: 100,
         },
       }),
-      15000,
+      CONTEXTUALIZE_TIMEOUT_MS,
       "Gemini contextualization"
     );
     const rewritten = (result.text || "").trim();
     return rewritten || question;
   } catch (err: any) {
+    if (isRetryableGeminiError(err)) {
+      console.warn("Query contextualization failed, using raw question:", err.message || err);
+      return question;
+    }
     console.warn("Query contextualization failed, using raw question:", err.message || err);
     return question;
   }
@@ -221,7 +228,7 @@ async function generateGeminiText(prompt: string): Promise<string> {
         maxOutputTokens: 900,
       },
     }),
-    30000,
+    GEMINI_TIMEOUT_MS,
     "Gemini generation"
   );
 
@@ -242,7 +249,7 @@ async function* groqStream(prompt: string) {
       max_completion_tokens: 900,
       stream: true,
     }),
-    20000,
+    GROQ_TIMEOUT_MS,
     "Groq completion"
   );
 
@@ -263,7 +270,7 @@ function* chunkText(text: string, size = 180): Generator<{ text: string }> {
   }
 }
 
-async function generateStream(prompt: string, { retries = 2 } = {}): Promise<AsyncGenerator<{ text: string }>> {
+async function generateStream(prompt: string, { retries = 1 } = {}): Promise<AsyncGenerator<{ text: string }>> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const text = await generateGeminiText(prompt);
@@ -274,7 +281,7 @@ async function generateStream(prompt: string, { retries = 2 } = {}): Promise<Asy
     } catch (err: any) {
       if (isRetryableGeminiError(err) && attempt < retries) {
         console.warn(`Gemini attempt ${attempt + 1} failed, retrying:`, err.message || err);
-        await sleep(500 * Math.pow(2, attempt));
+        await sleep(400 * Math.pow(2, attempt));
         continue;
       }
       if (isRetryableGeminiError(err) && groq()) {
