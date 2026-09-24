@@ -209,9 +209,9 @@ function isRetryableGeminiError(err: any) {
   );
 }
 
-async function* geminiStream(prompt: string) {
-  const stream = await withTimeout(
-    ai().models.generateContentStream({
+async function generateGeminiText(prompt: string): Promise<string> {
+  const result = await withTimeout(
+    ai().models.generateContent({
       model: GEMINI_MODEL,
       contents: prompt,
       config: {
@@ -221,18 +221,11 @@ async function* geminiStream(prompt: string) {
         maxOutputTokens: 900,
       },
     }),
-    15000,
-    "Gemini stream start"
+    30000,
+    "Gemini generation"
   );
 
-  const iterator = stream[Symbol.asyncIterator]();
-  while (true) {
-    const next = await withTimeout(iterator.next(), 15000, "Gemini stream chunk");
-    if (next.done) break;
-
-    const text = next.value.text || "";
-    if (text) yield { text };
-  }
+  return result.text || "";
 }
 
 async function* groqStream(prompt: string) {
@@ -263,15 +256,20 @@ async function* groqStream(prompt: string) {
   }
 }
 
+function* chunkText(text: string, size = 180): Generator<{ text: string }> {
+  for (let i = 0; i < text.length; i += size) {
+    const chunk = text.slice(i, i + size);
+    if (chunk) yield { text: chunk };
+  }
+}
+
 async function generateStream(prompt: string, { retries = 2 } = {}): Promise<AsyncGenerator<{ text: string }>> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const gen = geminiStream(prompt);
-      const first = await withTimeout(gen.next(), 15000, "Gemini first response");
-      // Wrap so the already-consumed first chunk isn't lost.
+      const text = await generateGeminiText(prompt);
+      if (!text) return (async function* () {})();
       return (async function* () {
-        if (!first.done) yield first.value;
-        for await (const chunk of gen) yield chunk;
+        yield* chunkText(text);
       })();
     } catch (err: any) {
       if (isRetryableGeminiError(err) && attempt < retries) {
