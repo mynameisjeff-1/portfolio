@@ -268,11 +268,11 @@ export interface Award {
 }
 
 export const award: Award = {
-  headline: "TOP 50",
-  detail: "Global Top 50 — Google Gemini Hackathon 2024",
+  headline: "TOP 20",
+  detail: "Global Top 20 — Google Gemini Hackathon 2024",
   description:
-    "Ranked in the global top 50 from 57,000+ participants across 160+ countries. Built an AI agriculture platform using NASA Earth-observation data, geospatial analytics and vision-language models for crop, yield and wildfire-risk insights.",
-  stats: ["57,000+ PARTICIPANTS", "160+ COUNTRIES", "GLOBAL TOP 50"],
+    "Ranked in the global top 20 from 57,000+ participants across 160+ countries. Built an AI agriculture platform using NASA Earth-observation data, geospatial analytics and vision-language models for crop, yield and wildfire-risk insights.",
+  stats: ["57,000+ PARTICIPANTS", "160+ COUNTRIES", "GLOBAL TOP 20"],
 };
 
 export interface VolunteerEntry {

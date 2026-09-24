@@ -138,7 +138,7 @@ primary_language: Python
 tags: nasa-space-apps, nasa, geospatial-ai, precision-agriculture, earth-observation, multimodal-ai, llama-vision, streamlit, folium, soilgrids, climate, wildfire, docker
 
 SUMMARY:
-Arzachel is an AI-driven Earth Observation and Precision Agriculture platform developed for the Google Gemini Hackathon. The project combines Earth-observation information, global soil data, geospatial analysis, interactive mapping, and multimodal AI to generate agricultural and environmental insights. This is the project behind Hamza's Global Top 50 result at the Google Gemini Hackathon 2024.
+Arzachel is an AI-driven Earth Observation and Precision Agriculture platform developed for the Google Gemini Hackathon. The project combines Earth-observation information, global soil data, geospatial analysis, interactive mapping, and multimodal AI to generate agricultural and environmental insights. This is the project behind Hamza's Global Top 20 result at the Google Gemini Hackathon 2024.
 
 MAIN FEATURES:
 - Geospatial soil analysis using SoilGrids data.

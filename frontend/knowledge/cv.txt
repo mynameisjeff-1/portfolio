@@ -53,7 +53,7 @@ Multi-Agent Automation Platform with MCP Tooling | Python, MCP, FastAPI, LangGra
 - Cut token cost per workflow by 35% by routing simple lookups to a smaller model, caching retrieval results and reserving the larger model for planning, with step level trace logging for debugging.
 
 AWARDS
-Google Gemini Hackathon (2024). Ranked in the global top 50 from 57,000+ participants across 160+ countries. Built an AI agriculture platform (Arzachel) using NASA Earth-observation data, geospatial analytics and vision-language models for crop, yield and wildfire-risk insights.
+Google Gemini Hackathon (2024). Ranked in the global top 20 from 57,000+ participants across 160+ countries. Built an AI agriculture platform (Arzachel) using NASA Earth-observation data, geospatial analytics and vision-language models for crop, yield and wildfire-risk insights.
 
 PUBLICATIONS
 The Agreeable Swarm: Sycophantic Drift, Consensus Cascades, and Epistemic Collapse in Multi-Agent Large Language Model Systems (2026). Introduces the ESRD and MA-ESRD drift framework and the Sycophancy Amplification Factor (SAF), a metric for how far a multi agent swarm shifts from a correct position under peer pressure, plus mitigations such as adversarial reviewer roles and confidence weighted aggregation. DOI: https://doi.org/10.13140/RG.2.2.11922.21440
