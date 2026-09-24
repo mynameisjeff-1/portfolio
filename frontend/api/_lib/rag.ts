@@ -4,7 +4,7 @@ import Groq from "groq-sdk";
 
 const EMBEDDING_MODEL = "gemini-embedding-001";
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_MODEL = "openai/gpt-oss-20b";
 const VECTOR_SIZE = 768;
 const COLLECTION = process.env.QDRANT_COLLECTION || "portfolio_knowledge";
 const TOP_K = 10;
@@ -286,7 +286,12 @@ async function generateStream(prompt: string, { retries = 1 } = {}): Promise<Asy
       }
       if (isRetryableGeminiError(err) && groq()) {
         console.warn("Gemini unavailable, falling back to Groq:", err.message || err);
-        return groqStream(prompt);
+        try {
+          return await groqStream(prompt);
+        } catch (groqErr: any) {
+          console.error("Groq fallback failed:", groqErr.message || groqErr);
+          throw groqErr;
+        }
       }
       throw err;
     }
