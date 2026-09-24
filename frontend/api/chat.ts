@@ -67,6 +67,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
   (res as any).flushHeaders?.();
+  // Keep the SSE connection active while retrieval and the model's first
+  // token are still pending.
+  res.write(": connected\n\n");
+  const heartbeat = setInterval(() => res.write(": heartbeat\n\n"), 5000);
 
   try {
     const { stream } = await answer(question, history);
@@ -82,5 +86,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     console.error("RAG answer failed:", err.message || err);
     res.write(`data: ${JSON.stringify({ error: true })}\n\n`);
     res.end();
+  } finally {
+    clearInterval(heartbeat);
   }
 }

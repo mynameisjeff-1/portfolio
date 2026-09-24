@@ -219,7 +219,7 @@ async function* groqStream(prompt: string) {
   }
 }
 
-async function generateStream(prompt: string, { retries = 2 } = {}): Promise<AsyncGenerator<{ text: string }>> {
+async function generateStream(prompt: string, { retries = 0 } = {}): Promise<AsyncGenerator<{ text: string }>> {
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const gen = geminiStream(prompt);
